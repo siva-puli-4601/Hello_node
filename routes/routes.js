@@ -1,4 +1,4 @@
-const {checkEmployee,addEmployee,checkProfile,leaveRequest,getLeaves,leaveChangeRequest,getLeavesForeachPerson}=require('../controllers/user')
+const {checkEmployee,addEmployee,checkProfile,leaveRequest,getTimesheetsStatus,getTimesheetsShow,getTimesheets,timeSheetupload,getLeaves,leaveChangeRequest,getLeavesForeachPerson,getEmployees}=require('../controllers/user')
 const express=require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const router=express.Router();
@@ -10,9 +10,10 @@ router.route('/genratereason').post(async (req,res)=>{
     console.log("hello server");
     const {reason}=req.body;
     const prompt =`You are an expert in crafting appropriate leave requests for a software company. 
-    Based on the provided ${reason}, generate a concise and professional leave request message. 
+    Based on the provided ${reason}, generate a concise and professional leave request message.
+    if you want more information about the reason take one random example based on that generate. 
     Ensure the reason is clearly communicated and is acceptable for managerial approval. 
-    The output should be in 50 words, with just the reason based on the provided data, and formatted as follows: Leave Request: reason. 
+    The output should be in 50 words, with just the reason based and formatted as follows: Leave Request: reason. 
     Do not include any additional suggestions or newline characters.`;
     try{
         const FirstResponse = await model.generateContent(prompt);
@@ -31,4 +32,9 @@ router.route("/leave").post(leaveRequest);
 router.route("/leaverequests").get(getLeaves);
 router.route("/leavechange").post(leaveChangeRequest);
 router.route("/leavesforeachperson").post(getLeavesForeachPerson);
+router.route("/employeesearch").post(getEmployees);
+router.route("/timesheet").post(timeSheetupload);
+router.route("/gettimesheets").get(getTimesheets);
+router.route("/timesheetsShow").post(getTimesheetsShow);
+router.route("/gettimesheetsstatus").post(getTimesheetsStatus);
 module.exports=router;
